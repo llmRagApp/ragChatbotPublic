@@ -68,8 +68,6 @@ nli_train_dataloader = NoDuplicatesDataLoader( # avoid duplicates within a batch
 
 # load KLUE-STS Dataset
 
-# 실습에 사용할 데이터는 klue-sts 데이터셋이다. 해당 데이터셋은 'train', 'validation'으로만 구성되어있지만, 'train'셋의 10%를 샘플링하여 validation 으로 사용하고 기존 'validation'을 test용도로 사용하였다.
-
 klue_sts_train = load_dataset("klue", "sts", split='train[:90%]')
 klue_sts_valid = load_dataset("klue", "sts", split='train[-10%:]') # train의 10%를 validation set으로 사용
 klue_sts_test = load_dataset("klue", "sts", split='validation')
@@ -95,9 +93,6 @@ def make_sts_input_example(dataset):
     return input_examples
 
 
-# 학습에 사용할 train 데이터는 배치학습을 위해 DataLoader()로 묶고, EmbeddingSimilarityEvaluator() 을 통해 학습 시 사용할 validation 검증기와 모델 평가 시 사용할 test 검증기를 만들었다.
-
-
 # Train Dataloader
 sts_train_dataloader = DataLoader(
     sts_train_examples,
@@ -116,8 +111,6 @@ test_evaluator = EmbeddingSimilarityEvaluator.from_input_examples(
     sts_test_examples,
     name="sts-test",
 )
-
-# Pooling 레이어의 경우, 논문 실험 기준 가장 성능이 좋은 mean pooling을 정의하였다.
 
 # Load Embedding Model
 embedding_model = models.Transformer(
@@ -138,8 +131,7 @@ model = SentenceTransformer(modules=[embedding_model, pooling_model])
 
 from sentence_transformers import losses
 
-# config
-# 논문과 동일하게 1 epochs, learning-rate warm-up의 경우 train의 10%를 설정
+
 sts_num_epochs = 1
 train_batch_size = 32
 nli_model_save_path = 'output/training_nli_by_MNRloss_'+pretrained_model_name.replace("/", "-")+'-'+datetime.now()
