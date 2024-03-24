@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: mysql57
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: llmrag
+      MYSQL_DATABASE: wc
+      MYSQL_USER: wc
+      MYSQL_PASSWORD: wc1!#
+      MYSQL_CHARSET: utf8
+      MYSQL_COLLATION: utf8_general_ci
+    ports:
+      - "3306:3306"
+    volumes:
+      - /home/ai/src/mysql57/data:/var/lib/mysql
